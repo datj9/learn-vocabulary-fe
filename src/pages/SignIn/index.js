@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import "./style.css";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -8,6 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
+import io from "socket.io-client";
+
+const socket = io.connect("https://learnvocab.herokuapp.com");
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -39,11 +43,18 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
     const classes = useStyles();
 
+    useEffect(() => {
+        socket.emit("auth", { token: "abcd" });
+        socket.on("authSuccess", function (data) {
+            console.log(data);
+        });
+    }, []);
+
     return (
         <Container component='main' maxWidth='xs'>
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar src={require("../assets/images/logo.png")} className={classes.avatar}></Avatar>
+                <Avatar src={require("../../assets/images/logo.png")} className={classes.avatar}></Avatar>
                 <Typography component='h1' variant='h5'>
                     Đăng nhập
                 </Typography>
@@ -65,7 +76,7 @@ export default function SignIn() {
                         required
                         fullWidth
                         name='password'
-                        label='Password'
+                        label='Mật khẩu'
                         type='password'
                         id='password'
                         autoComplete='current-password'

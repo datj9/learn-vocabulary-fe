@@ -5,6 +5,8 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
+import store from "./redux/store";
+import { Provider } from "react-redux";
 
 const theme = createMuiTheme({
     palette: {
@@ -18,9 +20,11 @@ const theme = createMuiTheme({
 });
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <App />
-        </ThemeProvider>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <App />
+            </ThemeProvider>
+        </Provider>
     </React.StrictMode>,
     document.getElementById("root")
 );
