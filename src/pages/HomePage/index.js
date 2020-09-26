@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Skeleton from "@material-ui/core/Skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { getTestsStart } from "../../redux/test/actions";
 
@@ -45,14 +46,26 @@ export default function HomePage() {
             {testsList.map((test) => (
                 <Card key={test.id} className={classes.card}>
                     <CardActionArea>
-                        <CardMedia className={classes.media} image={test.image} title={test.title} />
+                        {isLoading ? (
+                            <Skeleton animation='wave' variant='rect' className={classes.media} />
+                        ) : (
+                            <CardMedia className={classes.media} image={test.image} title={test.title} />
+                        )}
                         <CardContent>
-                            <Typography gutterBottom variant='h5' component='h2'>
-                                {test.title}
-                            </Typography>
-                            <Typography variant='body2' color='textSecondary' component='p'>
-                                {test.description}
-                            </Typography>
+                            {isLoading ? (
+                                <Skeleton animation='wave' height={10} width='80%' style={{ marginBottom: 6 }} />
+                            ) : (
+                                <Typography gutterBottom variant='h5' component='h2'>
+                                    {test.title}
+                                </Typography>
+                            )}
+                            {isLoading ? (
+                                <Skeleton animation='wave' height={10} width='80%' style={{ marginBottom: 6 }} />
+                            ) : (
+                                <Typography variant='body2' color='textSecondary' component='p'>
+                                    {test.description}
+                                </Typography>
+                            )}
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
