@@ -145,7 +145,7 @@ export default function SignUp() {
                                 fullWidth
                                 id='email'
                                 label='Địa chỉ email'
-                                name='email'
+                                type='email'
                                 autoComplete='email'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
