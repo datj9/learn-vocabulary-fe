@@ -2,8 +2,9 @@ import * as actionTypes from "./action-types";
 
 const INITIAL_STATE = {
     isLoading: false,
+    loaded: false,
     test: {},
-    testsList: [],
+    testsList: [{}, {}, {}],
     results: {},
 };
 
@@ -20,6 +21,7 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 isLoading: false,
+                loaded: true,
                 testsList: payload.tests,
                 results: payload.results,
             };
@@ -27,6 +29,20 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 isLoading: true,
+            };
+        case actionTypes.GET_ONE_TEST_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                loaded: true,
+                test: payload.test,
+            };
+        case actionTypes.CLEAN_UP:
+            return {
+                ...state,
+                loaded: false,
+                test: {},
+                testsList: [],
             };
         default:
             return state;

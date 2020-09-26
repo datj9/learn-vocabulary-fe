@@ -8,9 +8,13 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Skeleton from "@material-ui/core/Skeleton";
+import Skeleton from "@material-ui/lab/Skeleton";
+import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import { useDispatch, useSelector } from "react-redux";
-import { getTestsStart } from "../../redux/test/actions";
+import { cleanUp, getTestsStart } from "../../redux/test/actions";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -27,15 +31,32 @@ const useStyles = makeStyles((theme) => ({
     media: {
         height: 140,
     },
+    bottom: {
+        color: theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
+    },
+    top: {
+        color: "#1a90ff",
+        animationDuration: "550ms",
+        position: "absolute",
+        left: 0,
+    },
+    circle: {
+        strokeLinecap: "round",
+    },
 }));
 
 export default function HomePage() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { testsList, isLoading, results } = useSelector((state) => state.test);
+    const history = useHistory();
+    const { testsList, isLoading, results, loaded } = useSelector((state) => state.test);
 
     useEffect(() => {
         dispatch(getTestsStart());
+
+        return () => {
+            dispatch(cleanUp());
+        };
     }, [dispatch]);
 
     return (
@@ -43,24 +64,29 @@ export default function HomePage() {
             <Typography className={classes.title} variant='h4'>
                 Các nhóm từ
             </Typography>
-            {testsList.map((test) => (
-                <Card key={test.id} className={classes.card}>
+            {testsList.map((test, i) => (
+                <Card key={test.id || i} className={classes.card}>
                     <CardActionArea>
-                        {isLoading ? (
+                        {isLoading || loaded === false ? (
                             <Skeleton animation='wave' variant='rect' className={classes.media} />
                         ) : (
-                            <CardMedia className={classes.media} image={test.image} title={test.title} />
+                            <CardMedia
+                                onClick={() => history.push(`/tests/${test.id}`)}
+                                className={classes.media}
+                                image={test.image}
+                                title={test.title}
+                            />
                         )}
                         <CardContent>
-                            {isLoading ? (
-                                <Skeleton animation='wave' height={10} width='80%' style={{ marginBottom: 6 }} />
+                            {isLoading || loaded === false ? (
+                                <Skeleton animation='wave' height={35} width='60%' style={{ marginBottom: 6 }} />
                             ) : (
                                 <Typography gutterBottom variant='h5' component='h2'>
                                     {test.title}
                                 </Typography>
                             )}
-                            {isLoading ? (
-                                <Skeleton animation='wave' height={10} width='80%' style={{ marginBottom: 6 }} />
+                            {isLoading || loaded === false ? (
+                                <Skeleton animation='wave' height={15} width='80%' style={{ marginBottom: 6 }} />
                             ) : (
                                 <Typography variant='body2' color='textSecondary' component='p'>
                                     {test.description}
@@ -69,35 +95,62 @@ export default function HomePage() {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Button size='small' color='primary'>
-                            Bắt đầu
-                        </Button>
+                        <Box width='100%' display='flex' justifyContent='space-between'>
+                            {isLoading || loaded === false ? (
+                                <Skeleton animation='wave' height={20} width='3rem' style={{ marginBottom: 6 }} />
+                            ) : (
+                                <Button onClick={() => history.push(`/tests/${test.id}`)} size='small' color='primary'>
+                                    Bắt đầu
+                                </Button>
+                            )}
+                            {isLoading || loaded === false ? (
+                                <Skeleton
+                                    animation='wave'
+                                    variant='circle'
+                                    width={40}
+                                    height={40}
+                                    style={{ marginBottom: 6 }}
+                                />
+                            ) : (
+                                <Box position='relative' display='inline-flex'>
+                                    <CircularProgress
+                                        variant='determinate'
+                                        className={classes.bottom}
+                                        size={40}
+                                        thickness={4}
+                                        value={100}
+                                    />
+                                    <CircularProgress
+                                        variant='determinate'
+                                        disableShrink
+                                        className={classes.top}
+                                        classes={{
+                                            circle: classes.circle,
+                                        }}
+                                        size={40}
+                                        thickness={4}
+                                        value={0}
+                                    />
+                                    <Box
+                                        top={0}
+                                        left={0}
+                                        bottom={0}
+                                        right={0}
+                                        position='absolute'
+                                        display='flex'
+                                        alignItems='center'
+                                        justifyContent='center'
+                                    >
+                                        <Typography variant='caption' component='div' color='textSecondary'>
+                                            0/15
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            )}
+                        </Box>
                     </CardActions>
                 </Card>
             ))}
-            {/* <Card className={classes.card}>
-                <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image='/static/images/cards/contemplative-reptile.jpg'
-                        title='Contemplative Reptile'
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant='h5' component='h2'>
-                            Từ cơ bản
-                        </Typography>
-                        <Typography variant='body2' color='textSecondary' component='p'>
-                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across
-                            all continents except Antarctica
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size='small' color='primary'>
-                        Bắt đầu
-                    </Button>
-                </CardActions>
-            </Card> */}
         </Container>
     );
 }

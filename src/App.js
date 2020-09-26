@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import BottomNav from "./components/BottomNav";
 import HomePage from "./pages/HomePage";
+import TestPage from "./pages/TestPage";
 import JwtDecode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./redux/user/actions";
@@ -16,6 +17,7 @@ function App() {
         const accessToken = localStorage.getItem("accessToken");
         try {
             const user = JwtDecode(accessToken);
+            console.log(user.exp > Date.now() / 1000);
             dispatch(setUser(user));
         } catch (error) {}
     }, [dispatch]);
@@ -24,6 +26,7 @@ function App() {
         <Router>
             <Switch>
                 <Route exact path='/' component={HomePage} />
+                <Route exact path='/tests/:testId' component={TestPage} />
                 <Route
                     exact
                     path='/sign-in'
