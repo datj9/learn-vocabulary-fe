@@ -5,3 +5,9 @@ export const SIGN_IN_FAILURE = "SIGN_IN_FAILURE";
 export const SIGN_UP_START = "SIGN_UP_START";
 export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
 export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
+
+export const LOG_OUT = "LOG_OUT";
+
+export const SET_USER = "SET_USER";
+
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

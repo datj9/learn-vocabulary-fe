@@ -33,7 +33,7 @@ function BottomNav() {
                 setValue(2);
                 break;
             default:
-                break;
+                setValue(-1);
         }
     }, [location.pathname]);
 
@@ -46,11 +46,7 @@ function BottomNav() {
             showLabels
             className={classes.root}
         >
-            <BottomNavigationAction
-                onClick={() => history.push("/sign-up")}
-                label='Luyện tập'
-                icon={<SpellcheckIcon />}
-            />
+            <BottomNavigationAction onClick={() => history.push("/")} label='Luyện tập' icon={<SpellcheckIcon />} />
             <BottomNavigationAction label='Gần đây' icon={<RestoreIcon />} />
             <BottomNavigationAction onClick={() => history.push("/sign-in")} label='Tài khoản' icon={<PersonIcon />} />
         </BottomNavigation>
