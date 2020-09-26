@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         width: "100%",
+        marginBottom: theme.spacing(2),
     },
     media: {
         height: 140,
@@ -27,13 +29,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomePage() {
     const classes = useStyles();
+    const { testsList, isLoading, results } = useSelector((state) => state.test);
 
     return (
         <Container maxWidth='lg' className={classes.container}>
             <Typography className={classes.title} variant='h4'>
                 Các nhóm từ
             </Typography>
-            <Card className={classes.card}>
+            {testsList.map((test) => (
+                <Card key={test.id} className={classes.card}>
+                    <CardActionArea>
+                        <CardMedia className={classes.media} image={test.image} title={test.title} />
+                        <CardContent>
+                            <Typography gutterBottom variant='h5' component='h2'>
+                                {test.title}
+                            </Typography>
+                            <Typography variant='body2' color='textSecondary' component='p'>
+                                {test.description}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size='small' color='primary'>
+                            Bắt đầu
+                        </Button>
+                    </CardActions>
+                </Card>
+            ))}
+            {/* <Card className={classes.card}>
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
@@ -55,7 +78,7 @@ export default function HomePage() {
                         Bắt đầu
                     </Button>
                 </CardActions>
-            </Card>
+            </Card> */}
         </Container>
     );
 }
