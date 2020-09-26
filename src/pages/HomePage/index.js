@@ -14,8 +14,8 @@ import { getTestsStart } from "../../redux/test/actions";
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        marginBottom: theme.spacing(4),
-        marginTop: theme.spacing(8),
+        marginBottom: theme.spacing(8),
+        marginTop: theme.spacing(4),
     },
     title: {
         marginBottom: theme.spacing(2),
