@@ -5,7 +5,8 @@ const INITIAL_STATE = {
     loaded: false,
     test: {},
     testsList: [],
-    results: {},
+    resultsList: {},
+    result: {},
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -23,7 +24,7 @@ export default function (state = INITIAL_STATE, action) {
                 isLoading: false,
                 loaded: true,
                 testsList: payload.tests,
-                results: payload.results,
+                resultsList: payload.results,
             };
         case actionTypes.GET_ONE_TEST_START:
             return {
@@ -36,6 +37,7 @@ export default function (state = INITIAL_STATE, action) {
                 isLoading: false,
                 loaded: true,
                 test: payload.test,
+                result: payload.result,
             };
         case actionTypes.CLEAN_UP:
             return {

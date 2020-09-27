@@ -160,7 +160,9 @@ export default function TestPage() {
                         )}
                     </RadioGroup>
                 </FormControl>
-                {test.word ? <Button onClick={() => dispatch(saveWordStart())}>Lưu từ</Button> : null}
+                {questions[currentQuestion]?.word ? (
+                    <Button onClick={() => dispatch(saveWordStart(questions[currentQuestion].word._id))}>Lưu từ</Button>
+                ) : null}
             </Box>
         </Container>
     );

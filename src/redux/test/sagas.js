@@ -4,8 +4,8 @@ import BaseAPI from "../../api";
 import { getTestsSuccess, getTestsFail, getOneTestSuccess, saveWordSuccess } from "./actions";
 import * as actionTypes from "./action-types";
 import { apiURL } from "../../api";
+import io from "socket.io-client";
 
-const io = require("socket.io-client");
 const api = BaseAPI("tests");
 
 function* getTests() {
@@ -22,7 +22,7 @@ function* onGetTests() {
 }
 
 function* getOneTest({ payload: testId }) {
-    const res = yield call(api.get, `/${testId}`);
+    const res = yield call(api.get, `${testId}`);
 
     if (res.status === 200) {
         yield put(getOneTestSuccess(res.data.test, res.data.result));
@@ -57,8 +57,10 @@ function createSocketChannel(socket) {
         return unsubscribe;
     });
 }
-function* saveWord(socket, { payload }) {
-    yield apply(socket, socket.emit, ["saveWord", payload]);
+function* saveWord(socket, { payload: { word } }) {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log(word);
+    yield apply(socket, socket.emit, ["saveWord", { word, accessToken }]);
 }
 function* onSaveWord(socket) {
     yield takeEvery(actionTypes.SAVE_WORD_START, saveWord, socket);
@@ -69,6 +71,7 @@ export function* watchOnRes(socket) {
     while (true) {
         try {
             const payload = yield take(socketChannel);
+            console.log("payload", payload);
             if (payload) {
                 yield put(saveWordSuccess());
             }

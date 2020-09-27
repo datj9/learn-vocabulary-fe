@@ -30,8 +30,9 @@ export const cleanUp = () => ({
     type: actionTypes.CLEAN_UP,
 });
 
-export const saveWordStart = () => ({
+export const saveWordStart = (wordId) => ({
     type: actionTypes.SAVE_WORD_START,
+    payload: { word: wordId },
 });
 export const saveWordSuccess = () => ({
     type: actionTypes.SAVE_WORD_SUCCESS,

@@ -49,7 +49,7 @@ export default function HomePage() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { testsList, isLoading, results, loaded } = useSelector((state) => state.test);
+    const { testsList, isLoading, resultsList, loaded } = useSelector((state) => state.test);
 
     useEffect(() => {
         if (testsList.length === 0) {
@@ -139,7 +139,14 @@ export default function HomePage() {
                                         justifyContent='center'
                                     >
                                         <Typography variant='caption' component='div' color='textSecondary'>
-                                            0/15
+                                            {`${
+                                                resultsList[test.id]
+                                                    ? resultsList[test.id].records.reduce(
+                                                          (total, num) => total + num,
+                                                          0
+                                                      )
+                                                    : "0"
+                                            }/${test.questions.length}`}
                                         </Typography>
                                     </Box>
                                 </Box>
