@@ -4,8 +4,11 @@ const INITIAL_STATE = {
     isLoading: false,
     loaded: false,
     test: {},
-    testsList: [{}, {}, {}],
-    results: {},
+    testsList: [],
+    resultsList: {},
+    result: {},
+    savedWords: [],
+    saveSuccess: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -23,7 +26,7 @@ export default function (state = INITIAL_STATE, action) {
                 isLoading: false,
                 loaded: true,
                 testsList: payload.tests,
-                results: payload.results,
+                resultsList: payload.results,
             };
         case actionTypes.GET_ONE_TEST_START:
             return {
@@ -36,6 +39,8 @@ export default function (state = INITIAL_STATE, action) {
                 isLoading: false,
                 loaded: true,
                 test: payload.test,
+                result: payload.result,
+                savedWords: payload.savedWords,
             };
         case actionTypes.CLEAN_UP:
             return {
@@ -43,6 +48,13 @@ export default function (state = INITIAL_STATE, action) {
                 loaded: false,
                 test: {},
                 testsList: [],
+            };
+        case actionTypes.SAVE_WORD_SUCCESS:
+            return { ...state, saveSuccess: true, savedWords: state.savedWords.concat([action.payload]) };
+        case actionTypes.CLEAR_SAVE_SUCCESS:
+            return {
+                ...state,
+                saveSuccess: false,
             };
         default:
             return state;

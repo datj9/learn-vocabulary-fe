@@ -8,17 +8,23 @@ import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
 import JwtDecode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "./redux/user/actions";
+import { requestNewAccessToken, setUser } from "./redux/user/actions";
 
 function App() {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+
         try {
             const user = JwtDecode(accessToken);
-            console.log(user.exp > Date.now() / 1000);
-            dispatch(setUser(user));
+            if (user.exp > Date.now() / 1000) {
+                dispatch(setUser(user));
+            } else if (refreshToken) {
+                dispatch(requestNewAccessToken());
+            }
         } catch (error) {}
     }, [dispatch]);
 
