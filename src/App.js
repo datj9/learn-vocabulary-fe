@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import BottomNav from "./components/BottomNav";
 import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
+import SavedWords from "./pages/SavedWords";
 import JwtDecode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { requestNewAccessToken, setUser } from "./redux/user/actions";
@@ -13,6 +14,14 @@ import { requestNewAccessToken, setUser } from "./redux/user/actions";
 function App() {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+    const authenticate = (Page) => {
+        if (isAuthenticated) {
+            return <Page />;
+        } else {
+            return <Redirect to='/' />;
+        }
+    };
 
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
@@ -33,6 +42,7 @@ function App() {
             <Switch>
                 <Route exact path='/' component={HomePage} />
                 <Route exact path='/tests/:testId' component={TestPage} />
+                <Route exact path='/saved-words' render={() => authenticate(SavedWords)} />
                 <Route
                     exact
                     path='/sign-in'

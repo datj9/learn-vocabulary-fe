@@ -56,6 +56,11 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 saveSuccess: false,
             };
+        case actionTypes.GET_SAVED_WORDS_SUCCESS:
+            return {
+                ...state,
+                savedWords: payload,
+            };
         default:
             return state;
     }

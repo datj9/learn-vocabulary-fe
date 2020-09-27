@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import RestoreIcon from "@material-ui/icons/Restore";
+import SaveIcon from "@material-ui/icons/Save";
 import PersonIcon from "@material-ui/icons/Person";
 import SpellcheckIcon from "@material-ui/icons/Spellcheck";
 import { useHistory, useLocation } from "react-router";
@@ -47,7 +47,7 @@ function BottomNav() {
             className={classes.root}
         >
             <BottomNavigationAction onClick={() => history.push("/")} label='Luyện tập' icon={<SpellcheckIcon />} />
-            <BottomNavigationAction label='Gần đây' icon={<RestoreIcon />} />
+            <BottomNavigationAction onClick={() => history.push("/saved-words")} label='Đã lưu' icon={<SaveIcon />} />
             <BottomNavigationAction onClick={() => history.push("/sign-in")} label='Tài khoản' icon={<PersonIcon />} />
         </BottomNavigation>
     );

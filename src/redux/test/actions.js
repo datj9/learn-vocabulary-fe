@@ -42,3 +42,20 @@ export const saveWordSuccess = (word) => ({
 export const clearSaveSuccess = () => ({
     type: actionTypes.CLEAR_SAVE_SUCCESS,
 });
+
+export const getSavedWordsStart = () => ({
+    type: actionTypes.GET_SAVED_WORDS_START,
+});
+export const getSavedWordsSuccess = (words) => ({
+    type: actionTypes.GET_SAVED_WORDS_SUCCESS,
+    payload: words,
+});
+
+export const saveResult = (indexOfQuestion, answer, test) => ({
+    type: actionTypes.SAVE_RESULT,
+    payload: {
+        indexOfQuestion,
+        answer,
+        test,
+    },
+});
