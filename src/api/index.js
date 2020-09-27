@@ -6,8 +6,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(function (config) {
-    const refreshToken = localStorage.getItem("refreshToken");
-    config.headers.refresh_token = refreshToken ? refreshToken : "";
+    const accessToken = localStorage.getItem("accessToken");
+    config.headers.access_token = accessToken ? accessToken : "";
     config["Content-Type"] = "application/json";
     return config;
 });
