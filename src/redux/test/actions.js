@@ -18,9 +18,9 @@ export const getOneTestStart = (testId) => ({
     type: actionTypes.GET_ONE_TEST_START,
     payload: testId,
 });
-export const getOneTestSuccess = (test, result) => ({
+export const getOneTestSuccess = (test, result, savedWords) => ({
     type: actionTypes.GET_ONE_TEST_SUCCESS,
-    payload: { test, result },
+    payload: { test, result, savedWords },
 });
 export const getOneTestFail = () => ({
     type: actionTypes.GET_ONE_TEST_FAILURE,
@@ -34,6 +34,11 @@ export const saveWordStart = (wordId) => ({
     type: actionTypes.SAVE_WORD_START,
     payload: { word: wordId },
 });
-export const saveWordSuccess = () => ({
+export const saveWordSuccess = (word) => ({
     type: actionTypes.SAVE_WORD_SUCCESS,
+    payload: word,
+});
+
+export const clearSaveSuccess = () => ({
+    type: actionTypes.CLEAR_SAVE_SUCCESS,
 });

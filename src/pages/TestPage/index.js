@@ -13,17 +13,26 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Button from "@material-ui/core/Button";
+import SaveIcon from "@material-ui/icons/Save";
+import CheckIcon from "@material-ui/icons/Check";
+import green from "@material-ui/core/colors/green";
 import { useDispatch, useSelector } from "react-redux";
-import { getOneTestStart, saveWordStart } from "../../redux/test/actions";
+import { clearSaveSuccess, getOneTestStart, saveWordStart } from "../../redux/test/actions";
 
 const GreenRadio = withStyles({
     root: {
         "&$checked": {
-            color: "green",
+            color: green[600],
         },
     },
     checked: {},
 })((props) => <Radio color='default' {...props} />);
+const GreenButton = withStyles({
+    root: {
+        backgroundColor: green[600],
+        color: "#fff",
+    },
+})((props) => <Button {...props}>{props.children}</Button>);
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -46,7 +55,7 @@ export default function TestPage() {
     const dispatch = useDispatch();
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [userAnswer, setUserAnswer] = useState(-1);
-    const { test, isLoading, loaded } = useSelector((state) => state.test);
+    const { test, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
     const questions = test.questions ? test.questions : [];
 
     const handleAnswer = (e) => {
@@ -54,10 +63,12 @@ export default function TestPage() {
     };
 
     const changeToNextQuestion = () => {
+        dispatch(clearSaveSuccess());
         setCurrentQuestion(currentQuestion + 1);
         setUserAnswer(-1);
     };
     const changeToPreviousQuestion = () => {
+        dispatch(clearSaveSuccess());
         setCurrentQuestion(currentQuestion - 1);
         setUserAnswer(-1);
     };
@@ -160,8 +171,21 @@ export default function TestPage() {
                         )}
                     </RadioGroup>
                 </FormControl>
-                {questions[currentQuestion]?.word ? (
-                    <Button onClick={() => dispatch(saveWordStart(questions[currentQuestion].word._id))}>Lưu từ</Button>
+                {questions[currentQuestion]?.word &&
+                savedWords?.includes(questions[currentQuestion].word._id) === false &&
+                userAnswer >= 0 ? (
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        startIcon={<SaveIcon />}
+                        onClick={() => dispatch(saveWordStart(questions[currentQuestion].word._id))}
+                    >
+                        {saveSuccess ? "Đã Lưu" : "Lưu Từ"}
+                    </Button>
+                ) : saveSuccess === true ? (
+                    <GreenButton startIcon={<CheckIcon />} variant='contained'>
+                        Đã Lưu
+                    </GreenButton>
                 ) : null}
             </Box>
         </Container>

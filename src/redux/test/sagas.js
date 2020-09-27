@@ -25,7 +25,7 @@ function* getOneTest({ payload: testId }) {
     const res = yield call(api.get, `${testId}`);
 
     if (res.status === 200) {
-        yield put(getOneTestSuccess(res.data.test, res.data.result));
+        yield put(getOneTestSuccess(res.data.test, res.data.result, res.data.savedWords));
     }
 }
 
@@ -59,7 +59,7 @@ function createSocketChannel(socket) {
 }
 function* saveWord(socket, { payload: { word } }) {
     const accessToken = localStorage.getItem("accessToken");
-    console.log(word);
+
     yield apply(socket, socket.emit, ["saveWord", { word, accessToken }]);
 }
 function* onSaveWord(socket) {
@@ -71,9 +71,9 @@ export function* watchOnRes(socket) {
     while (true) {
         try {
             const payload = yield take(socketChannel);
-            console.log("payload", payload);
-            if (payload) {
-                yield put(saveWordSuccess());
+
+            if (payload.newSavedWord) {
+                yield put(saveWordSuccess(payload.newSavedWord.word));
             }
         } catch (error) {}
     }

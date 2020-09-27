@@ -7,6 +7,8 @@ const INITIAL_STATE = {
     testsList: [],
     resultsList: {},
     result: {},
+    savedWords: [],
+    saveSuccess: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -38,6 +40,7 @@ export default function (state = INITIAL_STATE, action) {
                 loaded: true,
                 test: payload.test,
                 result: payload.result,
+                savedWords: payload.savedWords,
             };
         case actionTypes.CLEAN_UP:
             return {
@@ -45,6 +48,13 @@ export default function (state = INITIAL_STATE, action) {
                 loaded: false,
                 test: {},
                 testsList: [],
+            };
+        case actionTypes.SAVE_WORD_SUCCESS:
+            return { ...state, saveSuccess: true, savedWords: state.savedWords.concat([action.payload]) };
+        case actionTypes.CLEAR_SAVE_SUCCESS:
+            return {
+                ...state,
+                saveSuccess: false,
             };
         default:
             return state;

@@ -10,3 +10,5 @@ export const CLEAN_UP = "CLEAN_UP";
 
 export const SAVE_WORD_START = "SAVE_WORD_START";
 export const SAVE_WORD_SUCCESS = "SAVE_WORD_SUCCESS";
+
+export const CLEAR_SAVE_SUCCESS = "CLEAR_SAVE_SUCCESS";

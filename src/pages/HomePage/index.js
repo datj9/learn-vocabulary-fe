@@ -146,7 +146,7 @@ export default function HomePage() {
                                                           0
                                                       )
                                                     : "0"
-                                            }/${test.questions.length}`}
+                                            }/${test.questions?.length}`}
                                         </Typography>
                                     </Box>
                                 </Box>
