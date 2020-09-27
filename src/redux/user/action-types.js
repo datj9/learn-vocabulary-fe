@@ -11,3 +11,5 @@ export const LOG_OUT = "LOG_OUT";
 export const SET_USER = "SET_USER";
 
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
+
+export const REQ_NEW_ACCESS_TOKEN = "REQ_NEW_ACCESS_TOKEN";

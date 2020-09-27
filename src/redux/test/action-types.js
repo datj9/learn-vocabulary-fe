@@ -7,3 +7,6 @@ export const GET_ONE_TEST_SUCCESS = "GET_ONE_TEST_SUCCESS";
 export const GET_ONE_TEST_FAILURE = "GET_ONE_TEST_FAILURE";
 
 export const CLEAN_UP = "CLEAN_UP";
+
+export const SAVE_WORD_START = "SAVE_WORD_START";
+export const SAVE_WORD_SUCCESS = "SAVE_WORD_SUCCESS";

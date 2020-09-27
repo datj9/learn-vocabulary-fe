@@ -52,19 +52,17 @@ export default function HomePage() {
     const { testsList, isLoading, results, loaded } = useSelector((state) => state.test);
 
     useEffect(() => {
-        dispatch(getTestsStart());
-
-        return () => {
-            dispatch(cleanUp());
-        };
-    }, [dispatch]);
+        if (testsList.length === 0) {
+            dispatch(getTestsStart());
+        }
+    }, [dispatch, testsList.length]);
 
     return (
         <Container maxWidth='lg' className={classes.container}>
             <Typography className={classes.title} variant='h4'>
                 Các nhóm từ
             </Typography>
-            {testsList.map((test, i) => (
+            {(testsList.length === 0 ? [{}, {}, {}] : testsList).map((test, i) => (
                 <Card key={test.id || i} className={classes.card}>
                     <CardActionArea>
                         {isLoading || loaded === false ? (
@@ -122,7 +120,6 @@ export default function HomePage() {
                                     />
                                     <CircularProgress
                                         variant='determinate'
-                                        disableShrink
                                         className={classes.top}
                                         classes={{
                                             circle: classes.circle,

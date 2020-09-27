@@ -29,3 +29,10 @@ export const getOneTestFail = () => ({
 export const cleanUp = () => ({
     type: actionTypes.CLEAN_UP,
 });
+
+export const saveWordStart = () => ({
+    type: actionTypes.SAVE_WORD_START,
+});
+export const saveWordSuccess = () => ({
+    type: actionTypes.SAVE_WORD_SUCCESS,
+});

@@ -1,7 +1,7 @@
-import { fork, put, call, takeLatest, all } from "redux-saga/effects";
+import { fork, put, call, takeLatest, all, takeEvery } from "redux-saga/effects";
 import * as actionTypes from "./action-types";
 import BaseAPI from "../../api";
-import { signUpSuccess, signUpFail } from "./actions";
+import { signUpSuccess, signUpFail, setUser } from "./actions";
 import jwtDecode from "jwt-decode";
 
 const api = BaseAPI("auth");
@@ -42,6 +42,22 @@ function* onSignIn() {
     yield takeLatest(actionTypes.SIGN_IN_START, signIn);
 }
 
+function* reqNewAccessToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    const res = yield call(api.post, "generate-access-token", { refreshToken });
+
+    if (res.status === 200) {
+        const { accessToken } = res.data;
+        const user = jwtDecode(accessToken);
+
+        yield put(setUser(user));
+        localStorage.setItem("accessToken", accessToken);
+    }
+}
+function* onReqNewAccessToken() {
+    yield takeEvery(actionTypes.REQ_NEW_ACCESS_TOKEN, reqNewAccessToken);
+}
+
 export default function* userSagas() {
-    yield all([fork(onSignUp), fork(onSignIn)]);
+    yield all([fork(onSignUp), fork(onSignIn), fork(onReqNewAccessToken)]);
 }

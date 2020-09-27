@@ -38,3 +38,7 @@ export const setUser = (user) => ({
 export const clearErrors = () => ({
     type: actionTypes.CLEAR_ERRORS,
 });
+
+export const requestNewAccessToken = () => ({
+    type: actionTypes.REQ_NEW_ACCESS_TOKEN,
+});

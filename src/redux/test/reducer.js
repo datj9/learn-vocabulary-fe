@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     isLoading: false,
     loaded: false,
     test: {},
-    testsList: [{}, {}, {}],
+    testsList: [],
     results: {},
 };
 
