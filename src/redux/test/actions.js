@@ -54,8 +54,8 @@ export const getSavedWordsSuccess = (words) => ({
 export const saveResult = (indexOfQuestion, answer, test) => ({
     type: actionTypes.SAVE_RESULT,
     payload: {
+        test,
         indexOfQuestion,
         answer,
-        test,
     },
 });

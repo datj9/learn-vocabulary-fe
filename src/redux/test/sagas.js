@@ -50,10 +50,12 @@ function createSocketChannel(socket) {
 
         socket.on("resNewSavedWord", wordHandler);
         socket.on("resSavedWords", wordHandler);
+        socket.on("resSaveResult", wordHandler);
 
         const unsubscribe = () => {
             socket.off("resNewSavedWord", wordHandler);
             socket.off("resSavedWords", wordHandler);
+            socket.off("resSaveResult", wordHandler);
         };
 
         return unsubscribe;
@@ -115,6 +117,37 @@ function* getSavedWordsFlow() {
     yield fork(watchResGetSavedWords, socket);
 }
 
+function* saveResult(socket, { payload }) {
+    const accessToken = localStorage.getItem("accessToken");
+
+    yield apply(socket, socket.emit, ["saveResult", { ...payload, accessToken }]);
+}
+function* onSaveResult(socket) {
+    yield takeEvery(actionTypes.SAVE_RESULT, saveResult, socket);
+}
+function* watchResSaveResult(socket) {
+    const socketChannel = yield call(createSocketChannel, socket);
+
+    while (true) {
+        const payload = yield take(socketChannel);
+
+        if (payload.isSuccess) {
+        }
+    }
+}
+function* saveResultFlow() {
+    const socket = yield call(createWebSocketConnection);
+
+    yield fork(onSaveResult, socket);
+    yield fork(watchResSaveResult, socket);
+}
+
 export default function* testSagas() {
-    yield all([fork(onGetTests), fork(onGetOneTest), fork(saveWordFlow), fork(getSavedWordsFlow)]);
+    yield all([
+        fork(onGetTests),
+        fork(onGetOneTest),
+        fork(saveWordFlow),
+        fork(getSavedWordsFlow),
+        fork(saveResultFlow),
+    ]);
 }

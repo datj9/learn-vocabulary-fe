@@ -52,108 +52,120 @@ export default function HomePage() {
     const { testsList, isLoading, resultsList, loaded } = useSelector((state) => state.test);
 
     useEffect(() => {
-        if (testsList.length === 0) {
-            dispatch(getTestsStart());
-        }
-    }, [dispatch, testsList.length]);
+        dispatch(getTestsStart());
+    }, [dispatch]);
+
+    const TestCard = ({ test, i }) => {
+        const numberOfCompletedQuestions = resultsList[test.id]?.records.reduce(
+            (total, num) => (num >= 0 ? total + 1 : total),
+            0
+        );
+        const questionsLength = test.questions?.length;
+        const haveResult = resultsList[test.id];
+
+        return (
+            <Card key={test.id || i} className={classes.card}>
+                <CardActionArea>
+                    {isLoading || loaded === false ? (
+                        <Skeleton animation='wave' variant='rect' className={classes.media} />
+                    ) : (
+                        <CardMedia
+                            onClick={() => history.push(`/tests/${test.id}`)}
+                            className={classes.media}
+                            image={test.image}
+                            title={test.title}
+                        />
+                    )}
+                    <CardContent>
+                        {isLoading || loaded === false ? (
+                            <Skeleton animation='wave' height={35} width='60%' style={{ marginBottom: 6 }} />
+                        ) : (
+                            <Typography gutterBottom variant='h5' component='h2'>
+                                {test.title}
+                            </Typography>
+                        )}
+                        {isLoading || loaded === false ? (
+                            <Skeleton animation='wave' height={15} width='80%' style={{ marginBottom: 6 }} />
+                        ) : (
+                            <Typography variant='body2' color='textSecondary' component='p'>
+                                {test.description}
+                            </Typography>
+                        )}
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Box width='100%' display='flex' justifyContent='space-between'>
+                        {isLoading || loaded === false ? (
+                            <Skeleton animation='wave' height={20} width='3rem' style={{ marginBottom: 6 }} />
+                        ) : (
+                            <Button onClick={() => history.push(`/tests/${test.id}`)} size='small' color='primary'>
+                                Bắt đầu
+                            </Button>
+                        )}
+                        {isLoading || loaded === false ? (
+                            <Skeleton
+                                animation='wave'
+                                variant='circle'
+                                width={40}
+                                height={40}
+                                style={{ marginBottom: 6 }}
+                            />
+                        ) : (
+                            <Box position='relative' display='inline-flex'>
+                                <CircularProgress
+                                    variant='determinate'
+                                    className={classes.bottom}
+                                    size={40}
+                                    thickness={4}
+                                    value={100}
+                                />
+                                <CircularProgress
+                                    variant='determinate'
+                                    className={classes.top}
+                                    classes={{
+                                        circle: classes.circle,
+                                    }}
+                                    size={40}
+                                    thickness={4}
+                                    value={haveResult ? (numberOfCompletedQuestions / questionsLength) * 100 : 0}
+                                />
+                                <Box
+                                    top={0}
+                                    left={0}
+                                    bottom={0}
+                                    right={0}
+                                    position='absolute'
+                                    display='flex'
+                                    alignItems='center'
+                                    justifyContent='center'
+                                >
+                                    <Typography variant='caption' component='div' color='textSecondary'>
+                                        {`${
+                                            haveResult
+                                                ? (numberOfCompletedQuestions / questionsLength) * 100 + "%"
+                                                : "0%"
+                                        }`}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        )}
+                    </Box>
+                </CardActions>
+            </Card>
+        );
+    };
 
     return (
         <Container maxWidth='lg' className={classes.container}>
-            <Typography className={classes.title} variant='h4'>
-                Các nhóm từ
-            </Typography>
+            {isLoading || loaded === false ? (
+                <Skeleton animation='wave' height={65} width='30%' style={{ marginBottom: 6 }} />
+            ) : (
+                <Typography className={classes.title} variant='h4'>
+                    Nhóm từ
+                </Typography>
+            )}
             {(testsList.length === 0 ? [{}, {}, {}] : testsList).map((test, i) => (
-                <Card key={test.id || i} className={classes.card}>
-                    <CardActionArea>
-                        {isLoading || loaded === false ? (
-                            <Skeleton animation='wave' variant='rect' className={classes.media} />
-                        ) : (
-                            <CardMedia
-                                onClick={() => history.push(`/tests/${test.id}`)}
-                                className={classes.media}
-                                image={test.image}
-                                title={test.title}
-                            />
-                        )}
-                        <CardContent>
-                            {isLoading || loaded === false ? (
-                                <Skeleton animation='wave' height={35} width='60%' style={{ marginBottom: 6 }} />
-                            ) : (
-                                <Typography gutterBottom variant='h5' component='h2'>
-                                    {test.title}
-                                </Typography>
-                            )}
-                            {isLoading || loaded === false ? (
-                                <Skeleton animation='wave' height={15} width='80%' style={{ marginBottom: 6 }} />
-                            ) : (
-                                <Typography variant='body2' color='textSecondary' component='p'>
-                                    {test.description}
-                                </Typography>
-                            )}
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                        <Box width='100%' display='flex' justifyContent='space-between'>
-                            {isLoading || loaded === false ? (
-                                <Skeleton animation='wave' height={20} width='3rem' style={{ marginBottom: 6 }} />
-                            ) : (
-                                <Button onClick={() => history.push(`/tests/${test.id}`)} size='small' color='primary'>
-                                    Bắt đầu
-                                </Button>
-                            )}
-                            {isLoading || loaded === false ? (
-                                <Skeleton
-                                    animation='wave'
-                                    variant='circle'
-                                    width={40}
-                                    height={40}
-                                    style={{ marginBottom: 6 }}
-                                />
-                            ) : (
-                                <Box position='relative' display='inline-flex'>
-                                    <CircularProgress
-                                        variant='determinate'
-                                        className={classes.bottom}
-                                        size={40}
-                                        thickness={4}
-                                        value={100}
-                                    />
-                                    <CircularProgress
-                                        variant='determinate'
-                                        className={classes.top}
-                                        classes={{
-                                            circle: classes.circle,
-                                        }}
-                                        size={40}
-                                        thickness={4}
-                                        value={0}
-                                    />
-                                    <Box
-                                        top={0}
-                                        left={0}
-                                        bottom={0}
-                                        right={0}
-                                        position='absolute'
-                                        display='flex'
-                                        alignItems='center'
-                                        justifyContent='center'
-                                    >
-                                        <Typography variant='caption' component='div' color='textSecondary'>
-                                            {`${
-                                                resultsList[test.id]
-                                                    ? resultsList[test.id].records.reduce(
-                                                          (total, num) => total + num,
-                                                          0
-                                                      )
-                                                    : "0"
-                                            }/${test.questions?.length}`}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            )}
-                        </Box>
-                    </CardActions>
-                </Card>
+                <TestCard test={test} i={i} />
             ))}
         </Container>
     );

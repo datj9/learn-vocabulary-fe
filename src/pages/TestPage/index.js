@@ -13,11 +13,12 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Button from "@material-ui/core/Button";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import SaveIcon from "@material-ui/icons/Save";
 import CheckIcon from "@material-ui/icons/Check";
 import green from "@material-ui/core/colors/green";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSaveSuccess, getOneTestStart, saveWordStart } from "../../redux/test/actions";
+import { clearSaveSuccess, getOneTestStart, saveResult, saveWordStart } from "../../redux/test/actions";
 
 const GreenRadio = withStyles({
     root: {
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     circleSkeleton: {
         marginRight: "8px",
     },
+    progress: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 export default function TestPage() {
     const classes = useStyles();
@@ -55,11 +59,16 @@ export default function TestPage() {
     const dispatch = useDispatch();
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [userAnswer, setUserAnswer] = useState(-1);
-    const { test, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const { test, result, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
     const questions = test.questions ? test.questions : [];
 
     const handleAnswer = (e) => {
         setUserAnswer(e.target.value);
+
+        if (isAuthenticated) {
+            dispatch(saveResult(currentQuestion, +e.target.value, test.id));
+        }
     };
 
     const changeToNextQuestion = () => {
@@ -82,6 +91,19 @@ export default function TestPage() {
             dispatch(clearSaveSuccess());
         };
     }, [dispatch, testId, test.id]);
+
+    useEffect(() => {
+        if (result.records && result.records[currentQuestion] >= 0) {
+            setUserAnswer(result.records[currentQuestion] + "");
+        }
+    }, [currentQuestion, result]);
+
+    useEffect(() => {
+        if (result.records) {
+            const indexOfLastQuestion = result.records.findIndex((record) => record === -1);
+            setCurrentQuestion(indexOfLastQuestion !== -1 ? indexOfLastQuestion : questions.length - 1);
+        }
+    }, [questions.length, result.records]);
 
     return (
         <Container maxWidth='lg' className={classes.container}>
@@ -110,6 +132,15 @@ export default function TestPage() {
                 )}
             </Box>
             <Box className={classes.questionContainer} display='flex' flexDirection='column'>
+                {isLoading || loaded === false ? (
+                    <Skeleton animation='wave' height={10} width='100%' className={classes.skeleton} />
+                ) : (
+                    <LinearProgress
+                        className={classes.progress}
+                        variant='determinate'
+                        value={((currentQuestion + 1) / questions.length) * 100}
+                    />
+                )}
                 <FormControl component='fieldset'>
                     {isLoading || loaded === false ? (
                         <Skeleton animation='wave' height={20} width='60%' className={classes.skeleton} />
