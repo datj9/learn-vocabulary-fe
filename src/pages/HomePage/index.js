@@ -59,9 +59,11 @@ export default function HomePage() {
 
     return (
         <Container maxWidth='lg' className={classes.container}>
-            <Typography className={classes.title} variant='h4'>
-                Các nhóm từ
-            </Typography>
+           {isLoading || loaded===false ? 
+                <Skeleton animation='wave' height={65} width='30%' style={{ marginBottom: 6 }} />
+              : <Typography className={classes.title} variant='h4'>
+               Nhóm từ
+            </Typography>}
             {(testsList.length === 0 ? [{}, {}, {}] : testsList).map((test, i) => (
                 <Card key={test.id || i} className={classes.card}>
                     <CardActionArea>

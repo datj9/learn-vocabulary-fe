@@ -6,6 +6,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import PersonIcon from "@material-ui/icons/Person";
 import SpellcheckIcon from "@material-ui/icons/Spellcheck";
 import { useHistory, useLocation } from "react-router";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({
     root: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles({
 function BottomNav() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const location = useLocation();
     const history = useHistory();
 
@@ -47,7 +49,13 @@ function BottomNav() {
             className={classes.root}
         >
             <BottomNavigationAction onClick={() => history.push("/")} label='Luyện tập' icon={<SpellcheckIcon />} />
-            <BottomNavigationAction onClick={() => history.push("/saved-words")} label='Đã lưu' icon={<SaveIcon />} />
+            {isAuthenticated ? (
+                <BottomNavigationAction
+                    onClick={() => history.push("/saved-words")}
+                    label='Đã lưu'
+                    icon={<SaveIcon />}
+                />
+            ) : null}
             <BottomNavigationAction onClick={() => history.push("/sign-in")} label='Tài khoản' icon={<PersonIcon />} />
         </BottomNavigation>
     );

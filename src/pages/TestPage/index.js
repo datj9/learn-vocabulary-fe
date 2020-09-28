@@ -13,6 +13,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Button from "@material-ui/core/Button";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import SaveIcon from "@material-ui/icons/Save";
 import CheckIcon from "@material-ui/icons/Check";
 import green from "@material-ui/core/colors/green";
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     },
     circleSkeleton: {
         marginRight: "8px",
+    },
+    progress: {
+        marginBottom: theme.spacing(2),
     },
 }));
 export default function TestPage() {
@@ -110,6 +114,15 @@ export default function TestPage() {
                 )}
             </Box>
             <Box className={classes.questionContainer} display='flex' flexDirection='column'>
+                {isLoading || loaded === false ? (
+                    <Skeleton animation='wave' height={10} width='100%' className={classes.skeleton} />
+                ) : (
+                    <LinearProgress
+                        className={classes.progress}
+                        variant='determinate'
+                        value={((currentQuestion + 1) / questions.length) * 100}
+                    />
+                )}
                 <FormControl component='fieldset'>
                     {isLoading || loaded === false ? (
                         <Skeleton animation='wave' height={20} width='60%' className={classes.skeleton} />
