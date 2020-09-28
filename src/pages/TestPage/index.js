@@ -77,6 +77,10 @@ export default function TestPage() {
         if (testId !== test.id) {
             dispatch(getOneTestStart(testId));
         }
+
+        return () => {
+            dispatch(clearSaveSuccess());
+        };
     }, [dispatch, testId, test.id]);
 
     return (

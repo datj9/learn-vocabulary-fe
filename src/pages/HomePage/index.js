@@ -13,7 +13,7 @@ import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { useDispatch, useSelector } from "react-redux";
-import { cleanUp, getTestsStart } from "../../redux/test/actions";
+import { getTestsStart } from "../../redux/test/actions";
 import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({

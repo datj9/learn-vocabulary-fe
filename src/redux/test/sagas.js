@@ -1,7 +1,7 @@
 import { all, put, fork, takeEvery, call, apply, take } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import BaseAPI from "../../api";
-import { getTestsSuccess, getTestsFail, getOneTestSuccess, saveWordSuccess } from "./actions";
+import { getTestsSuccess, getTestsFail, getOneTestSuccess, saveWordSuccess, getSavedWordsSuccess } from "./actions";
 import * as actionTypes from "./action-types";
 import { apiURL } from "../../api";
 import io from "socket.io-client";
@@ -49,9 +49,11 @@ function createSocketChannel(socket) {
         };
 
         socket.on("resNewSavedWord", wordHandler);
+        socket.on("resSavedWords", wordHandler);
 
         const unsubscribe = () => {
             socket.off("resNewSavedWord", wordHandler);
+            socket.off("resSavedWords", wordHandler);
         };
 
         return unsubscribe;
@@ -65,7 +67,7 @@ function* saveWord(socket, { payload: { word } }) {
 function* onSaveWord(socket) {
     yield takeEvery(actionTypes.SAVE_WORD_START, saveWord, socket);
 }
-export function* watchOnRes(socket) {
+function* watchResSaveWord(socket) {
     const socketChannel = yield call(createSocketChannel, socket);
 
     while (true) {
@@ -78,13 +80,41 @@ export function* watchOnRes(socket) {
         } catch (error) {}
     }
 }
-function* webSocketFlow() {
+function* saveWordFlow() {
     const socket = yield call(createWebSocketConnection);
 
     yield fork(onSaveWord, socket);
-    yield fork(watchOnRes, socket);
+    yield fork(watchResSaveWord, socket);
+}
+
+function* getSavedWords(socket) {
+    const accessToken = localStorage.getItem("accessToken");
+
+    yield apply(socket, socket.emit, ["getSavedWords", { accessToken }]);
+}
+function* onGetSavedWords(socket) {
+    yield takeEvery(actionTypes.GET_SAVED_WORDS_START, getSavedWords, socket);
+}
+function* watchResGetSavedWords(socket) {
+    const socketChannel = yield call(createSocketChannel, socket);
+
+    while (true) {
+        try {
+            const payload = yield take(socketChannel);
+
+            if (payload.savedWords) {
+                yield put(getSavedWordsSuccess(payload.savedWords));
+            }
+        } catch (error) {}
+    }
+}
+function* getSavedWordsFlow() {
+    const socket = yield call(createWebSocketConnection);
+
+    yield fork(onGetSavedWords, socket);
+    yield fork(watchResGetSavedWords, socket);
 }
 
 export default function* testSagas() {
-    yield all([fork(onGetTests), fork(onGetOneTest), fork(webSocketFlow)]);
+    yield all([fork(onGetTests), fork(onGetOneTest), fork(saveWordFlow), fork(getSavedWordsFlow)]);
 }
