@@ -18,7 +18,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import CheckIcon from "@material-ui/icons/Check";
 import green from "@material-ui/core/colors/green";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSaveSuccess, getOneTestStart, saveWordStart } from "../../redux/test/actions";
+import { clearSaveSuccess, getOneTestStart, saveResult, saveWordStart } from "../../redux/test/actions";
 
 const GreenRadio = withStyles({
     root: {
@@ -59,11 +59,16 @@ export default function TestPage() {
     const dispatch = useDispatch();
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [userAnswer, setUserAnswer] = useState(-1);
-    const { test, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const { test, result, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
     const questions = test.questions ? test.questions : [];
 
     const handleAnswer = (e) => {
         setUserAnswer(e.target.value);
+
+        if (isAuthenticated) {
+            dispatch(saveResult(currentQuestion, +e.target.value, test.id));
+        }
     };
 
     const changeToNextQuestion = () => {
@@ -86,6 +91,19 @@ export default function TestPage() {
             dispatch(clearSaveSuccess());
         };
     }, [dispatch, testId, test.id]);
+
+    useEffect(() => {
+        if (result.records && result.records[currentQuestion] >= 0) {
+            setUserAnswer(result.records[currentQuestion] + "");
+        }
+    }, [currentQuestion, result]);
+
+    useEffect(() => {
+        if (result.records) {
+            const indexOfLastQuestion = result.records.findIndex((record) => record === -1);
+            setCurrentQuestion(indexOfLastQuestion !== -1 ? indexOfLastQuestion : questions.length - 1);
+        }
+    }, [questions.length, result.records]);
 
     return (
         <Container maxWidth='lg' className={classes.container}>
