@@ -11,7 +11,7 @@ import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
-import { signInStart, clearErrors } from "../../redux/user/actions";
+import { signInStart, clearErrors } from "../../../redux/user/actions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -82,16 +82,26 @@ export default function SignIn() {
     }, [errors.email, dispatch]);
 
     useEffect(() => {
-        if (errors.password?.includes("not correct") || errors.password?.includes("too short")) {
+        if (
+            errors.password?.includes("not correct") ||
+            errors.password?.includes("too short")
+        ) {
             setPasswordErrorText("Mật khẩu không chính xác");
         }
-    }, [errors.password]);
+
+        return () => {
+            dispatch(clearErrors());
+        };
+    }, [errors.password, dispatch]);
 
     return (
         <Container component='main' maxWidth='xs'>
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar src={require("../../assets/images/logo.png")} className={classes.avatar}></Avatar>
+                <Avatar
+                    src={require("../../../assets/images/logo.png")}
+                    className={classes.avatar}
+                ></Avatar>
                 <Typography component='h1' variant='h5'>
                     Đăng nhập
                 </Typography>
@@ -115,7 +125,9 @@ export default function SignIn() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         error={passwordErrorText ? true : false}
-                        helperText={passwordErrorText ? passwordErrorText : null}
+                        helperText={
+                            passwordErrorText ? passwordErrorText : null
+                        }
                         variant='outlined'
                         margin='normal'
                         required
@@ -136,7 +148,11 @@ export default function SignIn() {
                         color='primary'
                         className={classes.submit}
                     >
-                        {isLoading ? <CircularProgress size={26} color='primary' /> : "Đăng Nhập"}
+                        {isLoading ? (
+                            <CircularProgress size={26} color='primary' />
+                        ) : (
+                            "Đăng Nhập"
+                        )}
                     </Button>
                     <Grid container>
                         <Grid item xs>

@@ -18,7 +18,12 @@ import SaveIcon from "@material-ui/icons/Save";
 import CheckIcon from "@material-ui/icons/Check";
 import green from "@material-ui/core/colors/green";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSaveSuccess, getOneTestStart, saveResult, saveWordStart } from "../../redux/test/actions";
+import {
+    clearSaveSuccess,
+    getOneTestStart,
+    saveResult,
+    saveWordStart,
+} from "../../../redux/test/actions";
 
 const GreenRadio = withStyles({
     root: {
@@ -60,7 +65,14 @@ export default function TestPage() {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [userAnswer, setUserAnswer] = useState(-1);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const { test, result, isLoading, loaded, savedWords, saveSuccess } = useSelector((state) => state.test);
+    const {
+        test,
+        result,
+        isLoading,
+        loaded,
+        savedWords,
+        saveSuccess,
+    } = useSelector((state) => state.test);
     const questions = test.questions ? test.questions : [];
 
     const handleAnswer = (e) => {
@@ -100,16 +112,46 @@ export default function TestPage() {
 
     useEffect(() => {
         if (result.records) {
-            const indexOfLastQuestion = result.records.findIndex((record) => record === -1);
-            setCurrentQuestion(indexOfLastQuestion !== -1 ? indexOfLastQuestion : questions.length - 1);
+            const indexOfLastQuestion = result.records.findIndex(
+                (record) => record === -1
+            );
+            setCurrentQuestion(
+                indexOfLastQuestion !== -1
+                    ? indexOfLastQuestion
+                    : questions.length - 1
+            );
         }
     }, [questions.length, result.records]);
+
+    useEffect(() => {
+        const handleKeyboardPress = (e) => {
+            if (
+                e.code === "ArrowRight" &&
+                currentQuestion < questions.length - 1
+            ) {
+                setCurrentQuestion(currentQuestion + 1);
+            } else if (e.code === "ArrowLeft" && currentQuestion > 0) {
+                setCurrentQuestion(currentQuestion - 1);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyboardPress);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyboardPress);
+        };
+    }, [questions.length, currentQuestion]);
 
     return (
         <Container maxWidth='lg' className={classes.container}>
             <Box display='flex' justifyContent='space-between'>
                 {isLoading || loaded === false ? (
-                    <Skeleton animation='wave' height={20} width='0%' style={{ marginBottom: 6, height: "48px" }} />
+                    <Skeleton
+                        animation='wave'
+                        height={20}
+                        width='0%'
+                        style={{ marginBottom: 6, height: "48px" }}
+                    />
                 ) : (
                     <>
                         <IconButton
@@ -121,7 +163,9 @@ export default function TestPage() {
                             <ChevronLeftIcon />
                         </IconButton>
                         <IconButton
-                            disabled={currentQuestion === test.questions?.length - 1}
+                            disabled={
+                                currentQuestion === test.questions?.length - 1
+                            }
                             onClick={changeToNextQuestion}
                             size='medium'
                             color='primary'
@@ -131,9 +175,18 @@ export default function TestPage() {
                     </>
                 )}
             </Box>
-            <Box className={classes.questionContainer} display='flex' flexDirection='column'>
+            <Box
+                className={classes.questionContainer}
+                display='flex'
+                flexDirection='column'
+            >
                 {isLoading || loaded === false ? (
-                    <Skeleton animation='wave' height={10} width='100%' className={classes.skeleton} />
+                    <Skeleton
+                        animation='wave'
+                        height={10}
+                        width='100%'
+                        className={classes.skeleton}
+                    />
                 ) : (
                     <LinearProgress
                         className={classes.progress}
@@ -143,10 +196,19 @@ export default function TestPage() {
                 )}
                 <FormControl component='fieldset'>
                     {isLoading || loaded === false ? (
-                        <Skeleton animation='wave' height={20} width='60%' className={classes.skeleton} />
+                        <Skeleton
+                            animation='wave'
+                            height={20}
+                            width='60%'
+                            className={classes.skeleton}
+                        />
                     ) : (
                         <Typography
-                            style={{ textAlign: questions[currentQuestion]?.word ? "center" : "left" }}
+                            style={{
+                                textAlign: questions[currentQuestion]?.word
+                                    ? "center"
+                                    : "left",
+                            }}
                             variant='h5'
                             color='textPrimary'
                             component='p'
@@ -154,10 +216,19 @@ export default function TestPage() {
                             {questions[currentQuestion]?.text}
                         </Typography>
                     )}
-                    <RadioGroup onChange={handleAnswer} value={userAnswer} aria-label='answer' name='answer'>
+                    <RadioGroup
+                        onChange={handleAnswer}
+                        value={userAnswer}
+                        aria-label='answer'
+                        name='answer'
+                    >
                         {isLoading || loaded === false ? (
                             <>
-                                <Box display='flex' flexDirection='row' className={classes.skeleton}>
+                                <Box
+                                    display='flex'
+                                    flexDirection='row'
+                                    className={classes.skeleton}
+                                >
                                     <Skeleton
                                         className={classes.circleSkeleton}
                                         variant='circle'
@@ -165,9 +236,17 @@ export default function TestPage() {
                                         height={22}
                                         width={22}
                                     />
-                                    <Skeleton animation='wave' height={20} width='60%' />
+                                    <Skeleton
+                                        animation='wave'
+                                        height={20}
+                                        width='60%'
+                                    />
                                 </Box>
-                                <Box display='flex' flexDirection='row' className={classes.skeleton}>
+                                <Box
+                                    display='flex'
+                                    flexDirection='row'
+                                    className={classes.skeleton}
+                                >
                                     <Skeleton
                                         className={classes.circleSkeleton}
                                         variant='circle'
@@ -175,9 +254,17 @@ export default function TestPage() {
                                         height={22}
                                         width={22}
                                     />
-                                    <Skeleton animation='wave' height={20} width='60%' />
+                                    <Skeleton
+                                        animation='wave'
+                                        height={20}
+                                        width='60%'
+                                    />
                                 </Box>
-                                <Box display='flex' flexDirection='row' className={classes.skeleton}>
+                                <Box
+                                    display='flex'
+                                    flexDirection='row'
+                                    className={classes.skeleton}
+                                >
                                     <Skeleton
                                         className={classes.circleSkeleton}
                                         variant='circle'
@@ -185,19 +272,33 @@ export default function TestPage() {
                                         height={22}
                                         width={22}
                                     />
-                                    <Skeleton animation='wave' height={20} width='60%' />
+                                    <Skeleton
+                                        animation='wave'
+                                        height={20}
+                                        width='60%'
+                                    />
                                 </Box>
                             </>
                         ) : (
-                            questions[currentQuestion]?.answers.map((answer, i) => (
+                            questions[
+                                currentQuestion
+                            ]?.answers.map((answer, i) => (
                                 <FormControlLabel
                                     key={i}
                                     value={i + ""}
                                     control={
-                                        +userAnswer >= 0 && i === questions[currentQuestion].correctAnswer ? (
-                                            <GreenRadio checked={userAnswer >= 0} />
+                                        +userAnswer >= 0 &&
+                                        i ===
+                                            questions[currentQuestion]
+                                                .correctAnswer ? (
+                                            <GreenRadio
+                                                checked={userAnswer >= 0}
+                                            />
                                         ) : (
-                                            <Radio disabled={+userAnswer >= 0} color='primary' />
+                                            <Radio
+                                                disabled={+userAnswer >= 0}
+                                                color='primary'
+                                            />
                                         )
                                     }
                                     label={answer}
@@ -207,13 +308,20 @@ export default function TestPage() {
                     </RadioGroup>
                 </FormControl>
                 {questions[currentQuestion]?.word &&
-                savedWords?.includes(questions[currentQuestion].word._id) === false &&
+                savedWords?.includes(questions[currentQuestion].word._id) ===
+                    false &&
                 userAnswer >= 0 ? (
                     <Button
                         variant='contained'
                         color='primary'
                         startIcon={<SaveIcon />}
-                        onClick={() => dispatch(saveWordStart(questions[currentQuestion].word._id))}
+                        onClick={() =>
+                            dispatch(
+                                saveWordStart(
+                                    questions[currentQuestion].word._id
+                                )
+                            )
+                        }
                     >
                         {saveSuccess ? "Đã Lưu" : "Lưu Từ"}
                     </Button>

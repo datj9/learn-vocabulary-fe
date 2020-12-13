@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signUpStart, clearErrors } from "../../redux/user/actions";
+import { signUpStart, clearErrors } from "../../../redux/user/actions";
 import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -116,7 +116,10 @@ export default function SignUp() {
         <Container component='main' maxWidth='xs'>
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar src={require("../../assets/images/logo.png")} className={classes.avatar} />
+                <Avatar
+                    src={require("../../../assets/images/logo.png")}
+                    className={classes.avatar}
+                />
                 <Typography component='h1' variant='h5'>
                     Đăng ký
                 </Typography>
@@ -125,7 +128,9 @@ export default function SignUp() {
                         <Grid item xs={12}>
                             <TextField
                                 error={nameErrorText ? true : false}
-                                helperText={nameErrorText ? nameErrorText : null}
+                                helperText={
+                                    nameErrorText ? nameErrorText : null
+                                }
                                 variant='outlined'
                                 required
                                 fullWidth
@@ -139,7 +144,9 @@ export default function SignUp() {
                         <Grid item xs={12}>
                             <TextField
                                 error={emailErrorText ? true : false}
-                                helperText={emailErrorText ? emailErrorText : null}
+                                helperText={
+                                    emailErrorText ? emailErrorText : null
+                                }
                                 variant='outlined'
                                 required
                                 fullWidth
@@ -154,7 +161,9 @@ export default function SignUp() {
                         <Grid item xs={12}>
                             <TextField
                                 error={passwordErrorText ? true : false}
-                                helperText={passwordErrorText ? passwordErrorText : null}
+                                helperText={
+                                    passwordErrorText ? passwordErrorText : null
+                                }
                                 variant='outlined'
                                 required
                                 fullWidth
@@ -178,7 +187,11 @@ export default function SignUp() {
                         color='primary'
                         className={classes.submit}
                     >
-                        {isLoading ? <CircularProgress size={26} color='primary' /> : "Đăng Ký"}
+                        {isLoading ? (
+                            <CircularProgress size={26} color='primary' />
+                        ) : (
+                            "Đăng Ký"
+                        )}
                     </Button>
                     <Grid container justify='flex-end'>
                         <Grid item>

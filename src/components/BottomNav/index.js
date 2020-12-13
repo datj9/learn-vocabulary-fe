@@ -5,6 +5,8 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import SaveIcon from "@material-ui/icons/Save";
 import PersonIcon from "@material-ui/icons/Person";
 import SpellcheckIcon from "@material-ui/icons/Spellcheck";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 import { useHistory, useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -18,6 +20,8 @@ const useStyles = makeStyles({
 });
 function BottomNav() {
     const classes = useStyles();
+    const theme = useTheme();
+    const isLargerThanSmallScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const [value, setValue] = React.useState(0);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const location = useLocation();
@@ -39,6 +43,8 @@ function BottomNav() {
         }
     }, [location.pathname]);
 
+    if (isLargerThanSmallScreen) return null;
+
     return (
         <BottomNavigation
             value={value}
@@ -48,7 +54,11 @@ function BottomNav() {
             showLabels
             className={classes.root}
         >
-            <BottomNavigationAction onClick={() => history.push("/")} label='Luyện tập' icon={<SpellcheckIcon />} />
+            <BottomNavigationAction
+                onClick={() => history.push("/")}
+                label='Luyện tập'
+                icon={<SpellcheckIcon />}
+            />
             {isAuthenticated ? (
                 <BottomNavigationAction
                     onClick={() => history.push("/saved-words")}
@@ -56,7 +66,11 @@ function BottomNav() {
                     icon={<SaveIcon />}
                 />
             ) : null}
-            <BottomNavigationAction onClick={() => history.push("/sign-in")} label='Tài khoản' icon={<PersonIcon />} />
+            <BottomNavigationAction
+                onClick={() => history.push("/sign-in")}
+                label='Tài khoản'
+                icon={<PersonIcon />}
+            />
         </BottomNavigation>
     );
 }
